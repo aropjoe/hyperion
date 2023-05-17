@@ -1,0 +1,6 @@
+pandas
+xlrd
+openpyxl
+nxviz
+matplotlib
+

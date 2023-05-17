@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>{{data.name}} | Hyperion</title>
+{% endblock title %}
+
+{% block header %}
+<h1 class="text-3xl font-bold tracking-tight text-gray-900">{{data.name}}</h1>
+{% endblock header %}
+
+{% block content %}
+
+
+<div class="lg:flex lg:items-center lg:justify-between">
+  <div class="min-w-0 flex-1">
+    <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Text Analysis</h2>
+  </div>
+  <div class="mt-5 flex lg:ml-4 lg:mt-0">
+
+    <span class="hidden sm:block">
+      <button type="button" data-modal-target="noteModal" data-modal-toggle="noteModal" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+        <svg class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path>
+        </svg>
+        Add Note/Summary
+      </button>
+    </span>
+
+  </div>
+</div>
+
+<div class="flex mb-4 items-center">
+  <h2 class="text-base font-bold text-gray-900 sm:truncate sm:tracking-tight">Total Sales: ₦{{total_sales}}</h2>
+  <h2 class="ml-4 mr-4 text-base font-bold text-gray-900 sm:truncate sm:tracking-tight">Total Profit: ₦{{total_profit}}</h2>
+</div>
+
+<div class="mb-4 border-b border-gray-200">
+  <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
+    <li class="mr-2" role="presentation">
+      <button class="inline-block p-4 border-b-2 rounded-t-lg" id="sentiment-tab" data-tabs-target="#sentiment" type="button" role="tab" aria-controls="sentiment" aria-selected="false">Sentiment Analysis</button>
+    </li>
+    <li class="mr-2" role="presentation">
+      <button class="inline-block p-4 border-b-2 rounded-t-lg" id="bigram-tab" data-tabs-target="#bigram" type="button" role="tab" aria-controls="bigram" aria-selected="false">Bigram Cloud</button>
+    </li>
+    <li class="mr-2" role="presentation">
+      <button class="inline-block p-4 border-b-2 rounded-t-lg" id="trigram-tab" data-tabs-target="#trigram" type="button" role="tab" aria-controls="trigram" aria-selected="false">Trigram Cloud</button>
+    </li>
+    <li class="mr-2" role="presentation">
+      <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300" id="network-tab" data-tabs-target="#network" type="button" role="tab" aria-controls="network" aria-selected="false">Network Analysis</button>
+    </li>
+    <li class="mr-2" role="presentation">
+      <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300" id="chord-tab" data-tabs-target="#chord" type="button" role="tab" aria-controls="chord" aria-selected="false">Chord Graph</button>
+    </li>
+  </ul>
+</div>
+<div id="myTabContent">
+  <div class="hidden p-4 rounded-lg bg-gray-50" id="sentiment" role="tabpanel" aria-labelledby="sentiment-tab">
+    <div class="p-4" style="height: 450px;">
+      
+    </div>
+  </div>
+  <div class="hidden p-4 rounded-lg bg-gray-50" id="bigram" role="tabpanel" aria-labelledby="bigram-tab">
+    <div class="p-4">
+      <h2>Bigram Word Cloud</h2>
+      <img src="data:image/png;base64,{{ bigram_image }}" alt="Bigram Word Cloud">
+    </div>
+  </div>
+  <div class="hidden p-4 rounded-lg bg-gray-50" id="trigram" role="tabpanel" aria-labelledby="trigram-tab">
+    <div class="p-4">
+      <h2>Trigram Word Cloud</h2>
+      <img src="data:image/png;base64,{{ wordcloud_image }}" alt="Trigram Word Cloud">
+    </div>
+  </div>
+  <div class="hidden p-4 rounded-lg bg-gray-50" id="network" role="tabpanel" aria-labelledby="network-tab">
+    <div class="p-4 w-full">
+      <h2>Network Analysis</h2>
+      <img src="data:image/png;base64,{{ network_image }}" alt="Network Image">
+    </div>
+  </div>
+  <div class="hidden p-4 rounded-lg bg-gray-50" id="chord" role="tabpanel" aria-labelledby="chord-tab">
+    <div class="p-4 w-full">
+      <h2>Chord Graph</h2>
+      <img src="data:image/png;base64,{{ chord_image }}" alt="Chord Graph">
+    </div>
+  </div>
+</div>
+
+
+<!-- Upload modal -->
+<div id="noteModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative w-full max-w-2xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow">
+            <!-- Modal header -->
+            <div class="flex items-start justify-between p-4 border-b rounded-t">
+                <h3 class="text-xl font-semibold text-gray-900">
+                    Add Note/Summary
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-hide="noteModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form class="p-4" method="POST" action="{% url 'core:analysis_create' %}">
+              {% csrf_token %}
+              <div class="mb-6">
+                  <label for="title" class="block mb-2 text-sm font-medium text-gray-900">Title</label>
+                  <input type="text" id="title" name="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="" required>
+                </div>       
+              <div class="mb-6">  
+                <label for="insights" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Insights</label>
+                <textarea id="insights" rows="4" name="insights" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Write a note or summary about this data..."></textarea>
+              </div>
+              <button type="submit" class="mb-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Save</button>
+              <input class="hidden" type="text" name="data_id" value="{{data.id}}">
+
+            </form>
+           
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock content %}
