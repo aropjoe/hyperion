@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Datasets | Hyperion</title>
+{% endblock title %}
+
+{% block header %}
+<h1 class="text-3xl font-bold tracking-tight text-gray-900">Datasets</h1>
+{% endblock header %}
+
+{% block content %}
+<div class="lg:flex lg:items-center lg:justify-between">
+  
+<div class="relative w-full overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left text-gray-500 ">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 ">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Dataset
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Project
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Last modified
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    <span class="sr-only">Edit</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for d in data %}
+            <tr class="bg-white border-b  hover:bg-gray-50 ">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                    <a href="{% url 'core:data_detail' d.id %}">{{d.name}}</a>
+                </th>
+                <td class="px-6 py-4">
+                    {{d.project.name}}
+                </td>
+                <td class="px-6 py-4">
+                    {{d.date_updated}}
+                </td>
+                <td class="px-6 py-4 text-right">
+                    <a href="{% url 'core:data_update' d.id %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</div>
+
+{% endblock content %}
