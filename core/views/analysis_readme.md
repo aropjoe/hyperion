@@ -1,0 +1,7 @@
+In this example, we define several views for the Analysis model:
+
+analysis_list: Retrieves all analyses belonging to the currently logged-in user and renders them in the analysis_list.html template.
+analysis_detail: Retrieves a specific analysis by its ID, ensuring it belongs to the currently logged-in user, and renders it in the analysis_detail.html template.
+analysis_create: Handles both GET and POST requests. For GET requests, it renders the form for creating a new analysis. For POST requests, it retrieves the submitted form data, creates a new Analysis object, and redirects to the detail view of the created analysis.
+analysis_update: Handles both GET and POST requests. For GET requests, it retrieves the analysis to be updated, ensuring it belongs to the currently logged-in user, and renders the form pre-populated with the analysis data. For POST requests, it updates the analysis with the submitted form data and redirects to the detail view of the updated analysis.
+analysis_delete: Handles both GET and POST requests. For GET requests, it retrieves the analysis to be deleted, ensuring it belongs to the currently logged-in user, and renders the confirmation page for deleting the analysis. For POST requests, it deletes the analysis and redirects to the analysis list view.
