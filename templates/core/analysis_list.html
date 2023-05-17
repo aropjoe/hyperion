@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Analyses | Hyperion</title>
+{% endblock title %}
+
+{% block header %}
+<h1 class="text-3xl font-bold tracking-tight text-gray-900">Analyses</h1>
+{% endblock header %}
+
+{% block content %}
+
+<section class="bg-white">
+  <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 ">
+      <div class="grid gap-8 mb-6 lg:mb-16 md:grid-cols-2">
+        {% for analysis in analyses %}
+          <div class="items-center bg-gray-50 rounded-lg shadow">
+              <div class="p-5">
+                  <h3 class="text-xl font-bold tracking-tight text-gray-900">
+                      <a href="{% url 'core:analysis_detail' analysis.id %}">{{analysis.title}}</a>
+                  </h3>
+                  <span class="text-gray-500">{{analysis.data.project.name}}</span>
+              </div>
+          </div> 
+        {% endfor %}
+</div>
+</div>
+</section>
+{% endblock content %}
