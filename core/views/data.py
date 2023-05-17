@@ -14,6 +14,11 @@ from core.utils import (
     group_sales_by_date,
     group_profit_by_date,
     group_sales_by_product,
+    # text utils
+    generate_bigram_wordcloud_images,
+    generate_wordcloud_images,
+    generate_network_image,
+    generate_chord_graph_image,
 )
 import json
 
@@ -26,6 +31,25 @@ def data_list(request):
 def data_detail(request, data_id):
     data = get_object_or_404(Data, pk=data_id)
     return render(request, "core/data_detail.html", {"data": data})
+
+
+def text_analysis(request, data_id):
+    data = get_object_or_404(Data, pk=data_id)
+    # file_path = data.files.first().file.path
+
+    bigram_image = generate_bigram_wordcloud_images()
+    wordcloud_image = generate_wordcloud_images()
+    #network_image = generate_network_image()
+    #chord_image = generate_chord_graph_image()
+
+    context = {
+        "bigram_image": bigram_image,
+        "wordcloud_image": wordcloud_image,
+        #"network_image": network_image,
+        #"chord_image": chord_image,
+        "data": data,
+    }
+    return render(request, "core/text_analysis.html", context)
 
 
 def data_analysis(request, data_id):
