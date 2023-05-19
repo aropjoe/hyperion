@@ -4,8 +4,6 @@ from .project import *
 
 
 def dashboard(request):
-    context = {
-        "user": request.user
-    }
+    context = {"user": request.user}
     template = "core/dashboard.html"
     return render(request, template, context)

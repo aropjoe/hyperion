@@ -60,8 +60,8 @@ def text_analysis(request, data_id):
         highest_value = max(a.values())
         matching_keys = [key for key, value in a.items() if value == highest_value][0]
         print(matching_keys)
-        #highest_key = matching_keys[0]
-        #highest_key = max(obj, key=lambda k: obj[k])
+        # highest_key = matching_keys[0]
+        # highest_key = max(obj, key=lambda k: obj[k])
 
         if "pos" == matching_keys:
             reviews_positive.append(review.strip())
@@ -73,19 +73,19 @@ def text_analysis(request, data_id):
         obj.update(a)
         texts.append(obj)
 
-    reviews_negative = ' '.join(reviews_negative)
-    reviews_positive = ' '.join(reviews_positive)
+    reviews_negative = " ".join(reviews_negative)
+    reviews_positive = " ".join(reviews_positive)
 
     bigram_image = generate_bigram_wordcloud_images(reviews_negative, reviews_positive)
     wordcloud_image = generate_wordcloud_images(reviews_positive, reviews_negative)
     network_image = generate_network_image()
-    #chord_image = generate_chord_graph_image()
+    # chord_image = generate_chord_graph_image()
 
     context = {
         "bigram_image": bigram_image,
         "wordcloud_image": wordcloud_image,
         "network_image": network_image,
-        #"chord_image": chord_image,
+        # "chord_image": chord_image,
         "data": data,
         "texts": texts,
         "error_message": error_message,
@@ -156,11 +156,19 @@ def data_analysis(request, data_id):
                 selected_dates = request.GET.getlist("order_dates")
 
                 # Filter gs3 dictionary based on selected options
-                gs3["sales"] = [sale for sale, date in zip(gs3["sales"], gs3["dates"]) if date in selected_dates]
+                gs3["sales"] = [
+                    sale
+                    for sale, date in zip(gs3["sales"], gs3["dates"])
+                    if date in selected_dates
+                ]
                 gs3["dates"] = [date for date in gs3["dates"] if date in selected_dates]
 
                 # Filter gp3 dictionary based on selected options
-                gp3["profit"] = [profit for profit, date in zip(gp3["profit"], gp3["dates"]) if date in selected_dates]
+                gp3["profit"] = [
+                    profit
+                    for profit, date in zip(gp3["profit"], gp3["dates"])
+                    if date in selected_dates
+                ]
                 gp3["dates"] = [date for date in gp3["dates"] if date in selected_dates]
 
             context.update(

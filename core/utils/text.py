@@ -2,14 +2,14 @@
 import pandas as pd
 import networkx as nx
 import matplotlib.pyplot as plt
-#from matplotlib.chord import Chord
+
+# from matplotlib.chord import Chord
 from nxviz import circos as CircosPlot
 from wordcloud import WordCloud
 import base64
 from io import BytesIO
 import nltk
 from nltk import ngrams
-
 
 
 def read_text_data(file_path):
@@ -67,12 +67,11 @@ def generate_wordcloud_images(pos_text, neg_text):
 
     neg_trigrams = ngrams(neg_text.split(), 3)
     neg_freq_dist = nltk.FreqDist(neg_trigrams)
-    trigrams_neg_dict = {' '.join(tri): freq for tri, freq in neg_freq_dist.items()}
+    trigrams_neg_dict = {" ".join(tri): freq for tri, freq in neg_freq_dist.items()}
 
     pos_trigrams = ngrams(pos_text.split(), 3)
     pos_freq_dist = nltk.FreqDist(pos_trigrams)
-    trigrams_pos_dict = {' '.join(tri): freq for tri, freq in pos_freq_dist.items()}
-
+    trigrams_pos_dict = {" ".join(tri): freq for tri, freq in pos_freq_dist.items()}
 
     trigrams_neg = pd.read_excel("core/datafile/trigrams_neg.xlsx")
     trigrams_pos = pd.read_excel("core/datafile/trigrams_pos.xlsx")
@@ -147,11 +146,11 @@ def generate_chord_graph_image():
 
     c = CircosPlot(
         G,
-        #figsize=(10, 10),
-        #node_labels=True,
-        #edge_width=weights,
-        #node_grouping="class",
-        #node_color="class",
+        # figsize=(10, 10),
+        # node_labels=True,
+        # edge_width=weights,
+        # node_grouping="class",
+        # node_color="class",
     )
     c.draw()
 
@@ -167,4 +166,3 @@ def generate_chord_graph_image():
     plt.close()
 
     return image_base64
-
