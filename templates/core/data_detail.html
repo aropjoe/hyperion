@@ -40,13 +40,23 @@
   <div class="mt-5 flex lg:ml-4 lg:mt-0">
 
     <span class="hidden sm:block">
-      <a href="{% url 'core:data_analysis' data.id %}" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+      <button id="analysedropdownDefaultButton" data-dropdown-toggle="analyse_dropdown" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
         <svg class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"></path>
         </svg>
         Analyse
-      </a>
+      </button>
     </span>
+    <div id="analyse_dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44">
+      <ul class="py-2 text-sm text-gray-700" aria-labelledby="analysedropdownDefaultButton">
+        <li>
+          <a href="{% url 'core:data_analysis' data.id %}" class="block px-4 py-2 hover:bg-gray-100">Data Analysis</a>
+        </li>
+        <li>
+          <a href="{% url 'core:text_analysis' data.id %}" class="block px-4 py-2 hover:bg-gray-100">Text Analysis</a>
+        </li>
+      </ul>
+    </div>
 
     <span class="ml-3 hidden sm:block">
       <a href="{% url 'core:data_update' data.id %}" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
@@ -76,8 +86,8 @@
       </button>
 
       <div id="moreactionsDropdown" class="hidden right-0 z-10 -mr-1 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="mobile-menu-button" tabindex="-1">
-        <!-- Active: "bg-gray-100", Not Active: "" -->
-        <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="mobile-menu-item-0">Analyse</a>
+        <a href="{% url 'core:data_analysis' data.id %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="mobile-menu-item-3">Data Analysis</a>
+        <a href="{% url 'core:text_analysis' data.id %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="mobile-menu-item-2">Text Analysis</a>
         <a href="{% url 'core:data_update' data.id %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="mobile-menu-item-0">Edit</a>
         <a href="{% url 'core:data_delete' data.id %}" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="mobile-menu-item-1">Delete</a>
       </div>
