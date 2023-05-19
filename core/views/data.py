@@ -123,6 +123,17 @@ def data_analysis(request, data_id):
                 "products": grouped_sales_product_1["Product Name"].to_list()[:10],
             }
 
+            if "order_dates" in request.GET.keys():
+                selected_dates = request.GET.getlist("order_dates")
+
+                # Filter gs3 dictionary based on selected options
+                gs3["sales"] = [sale for sale, date in zip(gs3["sales"], gs3["dates"]) if date in selected_dates]
+                gs3["dates"] = [date for date in gs3["dates"] if date in selected_dates]
+
+                # Filter gp3 dictionary based on selected options
+                gp3["profit"] = [profit for profit, date in zip(gp3["profit"], gp3["dates"]) if date in selected_dates]
+                gp3["dates"] = [date for date in gp3["dates"] if date in selected_dates]
+
             context.update(
                 {
                     "order_dates": order_dates,
