@@ -38,7 +38,6 @@ def process_excel(file_path):
     if is_xls_file(file_path):
         data_frame = pd.read_excel(file_path)
         data_frame["Order Date"] = data_frame["Order Date"].dt.strftime("%Y-%m-%d")
-        # data_frame["Order Date"] = pd.to_datetime(data_frame["Order Date"]).dt.strftime("%Y-%m-%d").tolist()
         return data_frame
     else:
         return None
