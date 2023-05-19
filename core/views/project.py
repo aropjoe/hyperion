@@ -31,7 +31,7 @@ def project_create(request):
 
         return redirect("core:project_detail", project_id=project.id)
 
-    projects = Project.objects.all()
+    projects = Project.objects.filter(owner=request.user)
     return render(request, "core/project_create.html", {"projects": projects})
 
 
