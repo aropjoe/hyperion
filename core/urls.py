@@ -18,11 +18,13 @@ from .views import (
     project_update,
     project_delete,
     text_analysis,
+    dashboard,
 )
 
 app_name = "core"
 
 urlpatterns = [
+    path("dashboard/", dashboard, name="dashboard"),
     path("data/", data_list, name="data_list"),
     path("data/create/", data_create, name="data_create"),
     path("data/<int:data_id>/", data_detail, name="data_detail"),
