@@ -41,15 +41,26 @@ def text_analysis(request, data_id):
 
     bigram_image = generate_bigram_wordcloud_images()
     wordcloud_image = generate_wordcloud_images()
-    #network_image = generate_network_image()
+    network_image = generate_network_image()
     #chord_image = generate_chord_graph_image()
+
+    reviews = read_text_data()
+
+    texts = []
+
+    for review in reviews:
+        a = analyze_sentiment(review.strip())
+        obj = {"text": review.strip()}
+        obj.update(a)
+        texts.append(obj)
 
     context = {
         "bigram_image": bigram_image,
         "wordcloud_image": wordcloud_image,
-        #"network_image": network_image,
+        "network_image": network_image,
         #"chord_image": chord_image,
         "data": data,
+        "texts": texts,
     }
     return render(request, "core/text_analysis.html", context)
 
