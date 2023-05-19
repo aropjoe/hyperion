@@ -25,34 +25,61 @@ from core.sentiment import analyze_sentiment
 import json
 
 
+@login_required
 def data_list(request):
-    data = Data.objects.all()
+    data = Data.objects.filter(owner=request.user)
     return render(request, "core/data_list.html", {"data": data})
 
 
+@login_required
 def data_detail(request, data_id):
     data = get_object_or_404(Data, pk=data_id)
     return render(request, "core/data_detail.html", {"data": data})
 
 
+@login_required
 def text_analysis(request, data_id):
     data = get_object_or_404(Data, pk=data_id)
-    # file_path = data.files.first().file.path
+    file_path = data.files.first().file.path
 
-    bigram_image = generate_bigram_wordcloud_images()
-    wordcloud_image = generate_wordcloud_images()
-    network_image = generate_network_image()
-    #chord_image = generate_chord_graph_image()
-
-    reviews = read_text_data()
+    try:
+        reviews = read_text_data(file_path)
+        error_message = ""
+    except Exception as e:
+        error_message = f"Error with file: {e}"
+        reviews = []
 
     texts = []
+    reviews_negative = []
+    reviews_positive = []
 
     for review in reviews:
         a = analyze_sentiment(review.strip())
         obj = {"text": review.strip()}
+
+        highest_value = max(a.values())
+        matching_keys = [key for key, value in a.items() if value == highest_value][0]
+        print(matching_keys)
+        #highest_key = matching_keys[0]
+        #highest_key = max(obj, key=lambda k: obj[k])
+
+        if "pos" == matching_keys:
+            reviews_positive.append(review.strip())
+        elif "neu" == matching_keys:
+            reviews_positive.append(review.strip())
+        else:
+            reviews_negative.append(review.strip())
+
         obj.update(a)
         texts.append(obj)
+
+    reviews_negative = ' '.join(reviews_negative)
+    reviews_positive = ' '.join(reviews_positive)
+
+    bigram_image = generate_bigram_wordcloud_images(reviews_negative, reviews_positive)
+    wordcloud_image = generate_wordcloud_images(reviews_positive, reviews_negative)
+    network_image = generate_network_image()
+    #chord_image = generate_chord_graph_image()
 
     context = {
         "bigram_image": bigram_image,
@@ -61,10 +88,12 @@ def text_analysis(request, data_id):
         #"chord_image": chord_image,
         "data": data,
         "texts": texts,
+        "error_message": error_message,
     }
     return render(request, "core/text_analysis.html", context)
 
 
+@login_required
 def data_analysis(request, data_id):
     data = get_object_or_404(Data, pk=data_id)
     file_path = data.files.first().file.path
@@ -162,6 +191,7 @@ def data_analysis(request, data_id):
     return render(request, "core/data_analysis.html", context)
 
 
+@login_required
 def data_create(request):
     if request.method == "POST":
         name = request.POST.get("name")
@@ -182,10 +212,11 @@ def data_create(request):
 
         return redirect("core:data_detail", data_id=data.id)
 
-    projects = Project.objects.all()
+    projects = Project.objects.filter(owner=request.user)
     return render(request, "core/data_create.html", {"projects": projects})
 
 
+@login_required
 def data_upload(request, data_id):
     if request.method == "POST":
         data = get_object_or_404(Data, pk=data_id)
@@ -200,6 +231,7 @@ def data_upload(request, data_id):
         return redirect("core:data_detail", data_id=data_id)
 
 
+@login_required
 def data_update(request, data_id):
     data = get_object_or_404(Data, pk=data_id)
 
@@ -213,12 +245,13 @@ def data_update(request, data_id):
 
         return redirect("core:data_detail", data_id=data.id)
 
-    projects = Project.objects.all()
+    projects = Project.objects.filter(owner=request.user)
     return render(
         request, "core/data_update.html", {"data": data, "projects": projects}
     )
 
 
+@login_required
 def data_delete(request, data_id):
     data = get_object_or_404(Data, pk=data_id)
 
