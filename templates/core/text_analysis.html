@@ -9,7 +9,7 @@
 {% endblock header %}
 
 {% block content %}
-
+{% load multiply %}
 
 <div class="lg:flex lg:items-center lg:justify-between">
   <div class="min-w-0 flex-1">
@@ -27,11 +27,6 @@
     </span>
 
   </div>
-</div>
-
-<div class="flex mb-4 items-center">
-  <h2 class="text-base font-bold text-gray-900 sm:truncate sm:tracking-tight">Total Sales: ₦{{total_sales}}</h2>
-  <h2 class="ml-4 mr-4 text-base font-bold text-gray-900 sm:truncate sm:tracking-tight">Total Profit: ₦{{total_profit}}</h2>
 </div>
 
 <div class="mb-4 border-b border-gray-200">
@@ -55,8 +50,60 @@
 </div>
 <div id="myTabContent">
   <div class="hidden p-4 rounded-lg bg-gray-50" id="sentiment" role="tabpanel" aria-labelledby="sentiment-tab">
-    <div class="p-4" style="height: 450px;">
-      
+    <div class="p-4">
+      {% for text in texts %}
+      <div class="mb-4">
+        <div class="flex items-center mb-5">
+          <p class="font-medium text-gray-900">{{text.text}}</p>
+        </div>
+        <div class="gap-8 sm:grid sm:grid-cols-2">
+          <div>
+            <dl>
+              <dt class="text-sm font-medium text-gray-500">Positive</dt>
+              <dd class="flex items-center mb-2">
+                <div class="w-full bg-gray-200 rounded h-1.5 mr-2">
+                  <div class="bg-blue-600 h-1.5 rounded" style="width: {{text.pos|multiply}}%"></div>
+                </div>
+                <span class="text-sm font-medium text-gray-500">{{text.pos}}</span>
+              </dd>
+            </dl>
+          </div>
+          <div>
+            <dl>
+              <dt class="text-sm font-medium text-gray-500">Neutral</dt>
+              <dd class="flex items-center mb-2">
+                <div class="w-full bg-gray-200 rounded h-1.5 mr-2">
+                  <div class="bg-yellow-400 h-1.5 rounded" style="width: {{text.neu|multiply}}%"></div>
+                </div>
+                <span class="text-sm font-medium text-gray-500">{{text.neu}}</span>
+              </dd>
+            </dl>
+          </div>
+          <div>
+            <dl>
+              <dt class="text-sm font-medium text-gray-500">Negative</dt>
+              <dd class="flex items-center mb-2">
+                <div class="w-full bg-gray-200 rounded h-1.5 mr-2">
+                  <div class="bg-red-600 h-1.5 rounded" style="width: {{text.neg|multiply}}%"></div>
+                </div>
+                <span class="text-sm font-medium text-gray-500">{{text.neg}}</span>
+              </dd>
+            </dl>
+          </div>
+          <div>
+            <dl>
+              <dt class="text-sm font-medium text-gray-500">Compound</dt>
+              <dd class="flex items-center mb-2">
+                <div class="w-full bg-gray-200 rounded h-1.5 mr-2">
+                  <div class="bg-gray-600 h-1.5 rounded" style="width: {{text.compound|multiply}}%"></div>
+                </div>
+                <span class="text-sm font-medium text-gray-500">{{text.compound}}</span>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
     </div>
   </div>
   <div class="hidden p-4 rounded-lg bg-gray-50" id="bigram" role="tabpanel" aria-labelledby="bigram-tab">
@@ -109,7 +156,7 @@
                   <input type="text" id="title" name="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="" required>
                 </div>       
               <div class="mb-6">  
-                <label for="insights" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Insights</label>
+                <label for="insights" class="block mb-2 text-sm font-medium text-gray-900">Insights</label>
                 <textarea id="insights" rows="4" name="insights" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Write a note or summary about this data..."></textarea>
               </div>
               <button type="submit" class="mb-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Save</button>
