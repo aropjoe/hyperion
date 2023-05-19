@@ -9,6 +9,15 @@ import base64
 from io import BytesIO
 
 
+def read_text_data():
+    filename = "core/datafile/reviews.txt"  # Replace with the actual filename and path of your text file
+
+    with open(filename, "r") as file:
+        reviews = file.readlines()
+
+    return reviews
+
+
 def generate_bigram_wordcloud_images():
     reviews_negative = open(
         "core/datafile/reviews_negative_long.txt", encoding="utf8"
@@ -102,7 +111,7 @@ def generate_wordcloud_images():
 
 
 def generate_network_image():
-    data = pd.read_excel("core/datafile/data_text_network.xlsx")
+    data = pd.read_csv("core/datafile/co_occurence.csv")
     G = nx.from_pandas_edgelist(data, "node1", "node2")
 
     fig = plt.figure(figsize=(8, 6))
@@ -125,7 +134,7 @@ def generate_network_image():
 # calculate the degree of nodes, formalize edges
 # Prepare a chord graph
 def generate_chord_graph_image():
-    data = pd.read_excel("core/datafile/data_text_network.xlsx")
+    data = pd.read_csv("core/datafile/co_occurence.csv")
     G = nx.from_pandas_edgelist(data, "node1", "node2")
     for v in G:
         G.nodes[v]["class"] = G.degree(v)
@@ -133,11 +142,11 @@ def generate_chord_graph_image():
 
     c = CircosPlot(
         G,
-        figsize=(10, 10),
-        node_labels=True,
-        edge_width=weights,
-        node_grouping="class",
-        node_color="class",
+        #figsize=(10, 10),
+        #node_labels=True,
+        #edge_width=weights,
+        #node_grouping="class",
+        #node_color="class",
     )
     c.draw()
 
