@@ -6,7 +6,7 @@ def calculate_conversion_rate(signups, purchases):
     return conversion_rate
 
 
-def generate_conversion_data(num_signups, conversion_rate):
+def read_conversion_data(num_signups, conversion_rate):
     signups = num_signups
     purchases = int((conversion_rate / 100) * signups)
 
@@ -18,7 +18,7 @@ def generate_conversion_data(num_signups, conversion_rate):
 
     return signups, purchases, purchase_events
 
-
+"""
 # Example usage
 num_signups = 1000
 conversion_rate = 5.0  # 5% conversion rate
@@ -35,3 +35,4 @@ print("Number of signups:", signups)
 print("Number of purchases:", purchases)
 print("Conversion rate:", conversion_rate_result)
 print("Purchase events:", purchase_events)
+"""

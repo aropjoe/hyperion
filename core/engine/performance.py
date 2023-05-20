@@ -81,14 +81,14 @@ def calculate_response_time(server_logs):
     average_response_time = sum(response_times) / len(response_times)
     return max_response_time, min_response_time, average_response_time
 
-
+"""
 file_path = "performance.json"
 server_logs = read_server_logs_from_json(file_path)
 uptime_percentage = calculate_uptime(server_logs, "json")
 print("response_times: ", calculate_response_time(server_logs))
 print("latency: ", calculate_average_latency(server_logs))
 print(f"Uptime Percentage: {uptime_percentage:.2f}%")
-
+"""
 """
 In the example above, calculate_uptime function calculates the uptime percentage based on server logs that contain entries indicating whether the server was up or down at a given timestamp.
 
