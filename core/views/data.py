@@ -21,6 +21,7 @@ from core.utils import (
     generate_chord_graph_image,
     read_text_data,
 )
+from core.engine.revenue import calculate_cltv, average_revenue, revenue_by_tier, total_revenue, read_subscriptions_from_json, revenue_by_tier_array, cltv_array
 from core.engine.conversion_rate import calculate_conversion_rate, read_conversion_data
 from core.engine.performance import calculate_response_time, calculate_average_latency, calculate_uptime, read_server_logs_from_csv, read_server_logs_from_json 
 from core.sentiment import analyze_sentiment
@@ -95,6 +96,7 @@ def text_analysis(request, data_id):
     return render(request, "core/text_analysis.html", context)
 
 
+@login_required
 def conversion_analytics(request, data_id):
     data = get_object_or_404(Data, pk=data_id)
     file_path = data.files.first().file.path
@@ -120,6 +122,7 @@ def conversion_analytics(request, data_id):
     return render(request, template, context)
 
 
+@login_required
 def performance_metrics(request, data_id):
     data = get_object_or_404(Data, pk=data_id)
     file_path = data.files.first().file.path
@@ -145,6 +148,37 @@ def performance_metrics(request, data_id):
         "data": data,
     }
     template = "core/performance_metrics.html"
+    return render(request, template, context)
+
+
+@login_required
+def subscription_analytics(request, data_id):
+    data = get_object_or_404(Data, pk=data_id)
+    file_path = data.files.first().file.path
+
+    subscriptions_data = read_subscriptions_from_json(file_path)
+    total_revenue = sum(subscription["amount"] for subscription in subscriptions_data)
+
+    cltv = calculate_cltv(subscriptions_data)
+    total_revenue = total_revenue(subscriptions_data)
+    average_revenue = average_revenue(subscriptions_data, total_revenue)
+    revenue_by_tier = revenue_by_tier(subscriptions_data)
+
+    r_tiers, r_revenue = revenue_by_tier_array(revenue_by_tier)
+    c_tiers, c_revenue = cltv_array(cltv)
+
+    context = {
+        "cltv": cltv,
+        "total_revenue": total_revenue,
+        "average_revenue": average_revenue,
+        "revenue_by_tier": revenue_by_tier,
+        "r_tiers": r_tiers,
+        "r_revenue": r_revenue,
+        "c_revenue": c_revenue,
+        "c_tiers": c_tiers,
+        "data": data,
+    }
+    template = "core/subscription_analytics.html"
     return render(request, template, context)
 
 
