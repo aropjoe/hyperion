@@ -21,6 +21,7 @@ from core.utils import (
     generate_chord_graph_image,
     read_text_data,
 )
+from core.engine import calculate_conversion_rate, read_conversion_data
 from core.sentiment import analyze_sentiment
 import json
 
@@ -91,6 +92,30 @@ def text_analysis(request, data_id):
         "error_message": error_message,
     }
     return render(request, "core/text_analysis.html", context)
+
+
+def conversion_analytics(request, data_id):
+    data = get_object_or_404(Data, pk=data_id)
+    file_path = data.files.first().file.path
+
+    # read conversion data here
+    # Example usage
+    num_signups = 1000
+    conversion_rate = 5.0  # 5% conversion rate
+
+    signups, purchases, purchase_events = read_conversion_data(
+        num_signups, conversion_rate
+    )
+    conversion_rate_result = calculate_conversion_rate(signups, purchases)
+
+    context = {
+        "total_signups": signups,
+        "total_purchases": purchases,
+        "purchase_events": purchase_events,
+        "conversion_rate_result": conversion_rate_result,
+    }
+    template = "core/conversion_analytics.html"
+    return render(request, template, context)
 
 
 @login_required
