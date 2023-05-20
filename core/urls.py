@@ -21,6 +21,7 @@ from .views import (
     dashboard,
     conversion_analytics,
     performance_metrics,
+    subscription_analytics,
 )
 
 app_name = "core"
