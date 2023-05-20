@@ -21,7 +21,8 @@ from core.utils import (
     generate_chord_graph_image,
     read_text_data,
 )
-from core.engine import calculate_conversion_rate, read_conversion_data
+from core.engine.conversion_rate import calculate_conversion_rate, read_conversion_data
+from core.engine.performance import calculate_response_time, calculate_average_latency, calculate_uptime, read_server_logs_from_csv, read_server_logs_from_json 
 from core.sentiment import analyze_sentiment
 import json
 
@@ -113,8 +114,37 @@ def conversion_analytics(request, data_id):
         "total_purchases": purchases,
         "purchase_events": purchase_events,
         "conversion_rate_result": conversion_rate_result,
+        "data": data,
     }
     template = "core/conversion_analytics.html"
+    return render(request, template, context)
+
+
+def performance_metrics(request, data_id):
+    data = get_object_or_404(Data, pk=data_id)
+    file_path = data.files.first().file.path
+
+    server_logs = read_server_logs_from_json(file_path)
+    uptime_percentage = calculate_uptime(server_logs, "json")
+
+    response_times_percentage = calculate_response_time(server_logs)
+    average_latency = calculate_average_latency(server_logs)
+    uptime_percentage = f"{uptime_percentage:.2f}%"
+
+    stamps = [datetime.datetime.strptime(log_entry["timestamp"], "%Y-%m-%d %H:%M:%S") for log_entry in server_logs]
+    latency_data = [x["latency"] for x in server_logs]
+    response_times = [x["response_time"] for x in server_logs]
+
+    context = {
+        "uptime_percentage": uptime_percentage,
+        "stamps": stamps,
+        "latency_data": latency_data,
+        "response_times": response_times,
+        "average_latency": average_latency,
+        "response_times_percentage": response_times_percentage,
+        "data": data,
+    }
+    template = "core/performance_metrics.html"
     return render(request, template, context)
 
 
