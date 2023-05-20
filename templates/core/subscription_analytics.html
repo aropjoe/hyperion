@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>{{data.name}} | Hyperion</title>
+{% endblock title %}
+
+{% block header %}
+<h1 class="text-3xl font-bold tracking-tight text-gray-900">Subscription Analytics</h1>
+{% endblock header %}
+
+{% block content %}
+
+{% if not empty_file %}
+
+<div class="lg:flex lg:items-center lg:justify-between">
+  <div class="min-w-0 flex-1">
+    <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">{{data.name}}</h2>
+  </div>
+  <div class="mt-5 flex lg:ml-4 lg:mt-0">
+
+    <span class="hidden sm:block">
+      <button type="button" data-modal-target="noteModal" data-modal-toggle="noteModal" class="ml-2 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+        <svg class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path>
+        </svg>
+        Add Note/Summary
+      </button>
+    </span>
+
+  </div>
+</div>
+
+<div class="flex mb-4 items-center">
+  <h2 class="text-base font-bold text-gray-900 sm:truncate sm:tracking-tight">Total Revenue: {{total_revenue}}</h2>
+  <h2 class="ml-4 mr-4 text-base font-bold text-gray-900 sm:truncate sm:tracking-tight">Average Revenue: {{average_revenue}}</h2>
+</div>
+
+<div class="mb-4 border-b border-gray-200">
+  <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
+    <li role="presentation">
+      <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300" id="cltv-tab" data-tabs-target="#cltv" type="button" role="tab" aria-controls="cltv" aria-selected="false">Customer Life-Time Value</button>
+    </li>
+    <li class="mr-2" role="presentation">
+      <button class="inline-block p-4 border-b-2 rounded-t-lg" id="revenue_tier-tab" data-tabs-target="#revenue_tier" type="button" role="tab" aria-controls="revenue_tier" aria-selected="false">Revenue by Tier</button>
+    </li>
+  </ul>
+</div>
+<div id="myTabContent">
+  <div class="hidden p-4 rounded-lg bg-gray-50" id="cltv" role="tabpanel" aria-labelledby="cltv-tab">
+    <div class="p-4" style="height: 450px;">
+      <div class="mb-6 inline-flex rounded-md shadow-sm" role="group">
+        <button id="doughnutBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 9.563C9 9.252 9.252 9 9.563 9h4.874c.311 0 .563.252.563.563v4.874c0 .311-.252.563-.563.563H9.564A.562.562 0 019 14.437V9.564z"></path>
+          </svg>
+          Doughnut
+        </button>
+        <button id="pieBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"></path>
+          </svg>
+          Pie
+        </button>
+        <button id="polarBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border-t border-b border-l border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"></path>
+          </svg>
+          Polar Area
+        </button>
+        <button id="barBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"></path>
+          </svg>
+          Bar
+        </button>
+        
+      </div>
+      <canvas id="myCltvChart"></canvas>
+    </div>
+  </div>
+  <div class="hidden p-4 rounded-lg bg-gray-50" id="revenue_tier" role="tabpanel" aria-labelledby="revenue_tier-tab">
+    <div class="p-4" style="height: 450px;">
+      <div class="mb-6 inline-flex rounded-md shadow-sm" role="group">
+        <button id="doughnutBtn2" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 9.563C9 9.252 9.252 9 9.563 9h4.874c.311 0 .563.252.563.563v4.874c0 .311-.252.563-.563.563H9.564A.562.562 0 019 14.437V9.564z"></path>
+          </svg>
+          Doughnut
+        </button>
+        <button id="pieBtn2" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"></path>
+          </svg>
+          Pie
+        </button>
+        <button id="polarBtn2" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border-t border-b border-l border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"></path>
+          </svg>
+          Polar Area
+        </button>
+        <button id="barBtn2" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"></path>
+          </svg>
+          Bar
+        </button>
+        
+      </div>
+      <canvas id="myRevenueTChart"></canvas>
+    </div>
+  </div>
+</div>
+
+{% else %}
+
+<h1 class="text-xl font-bold tracking-tight text-gray-900">File is empty</h1>
+
+{% endif %}
+
+
+<!-- Note modal -->
+<div id="noteModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative w-full max-w-2xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow">
+            <!-- Modal header -->
+            <div class="flex items-start justify-between p-4 border-b rounded-t">
+                <h3 class="text-xl font-semibold text-gray-900">
+                    Add Note/Summary
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-hide="noteModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form class="p-4" method="POST" action="{% url 'core:analysis_create' %}">
+              {% csrf_token %}
+              <div class="mb-6">
+                  <label for="title" class="block mb-2 text-sm font-medium text-gray-900">Title</label>
+                  <input type="text" id="title" name="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="" required>
+                </div>       
+              <div class="mb-6">  
+                <label for="insights" class="block mb-2 text-sm font-medium text-gray-900">Insights</label>
+                <textarea id="insights" rows="4" name="insights" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Write a note or summary about this data..."></textarea>
+              </div>
+              <button type="submit" class="mb-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Save</button>
+              <input class="hidden" type="text" name="data_id" value="{{data.id}}">
+
+            </form>
+           
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script>
+  $(document).ready(function() {
+    const ctx = document.getElementById('myCltvChart');
+    const ctx2 = document.getElementById('myRevenueTChart');
+    let cltv_chart = null;
+    let revenue_tier_chart = null;
+
+    function renderCltv(type) {
+      if (cltv_chart) {
+        cltv_chart.destroy(); // Destroy previous chart before rendering a new one
+      }
+      const cltv_data = {
+        labels: {{c_tiers | safe}},
+        datasets: [{
+          label: 'Customer Life-Time Value (CLTV)',
+          data: {{c_revenue}},
+          borderWidth: 1
+        }]
+      };
+      const cltv_options = {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        indexAxis: 'y',
+      };
+      cltv_chart = new Chart(ctx, {
+        type: type,
+        data: cltv_data,
+        options: cltv_options
+      });
+    }
+    // Button click handlers
+    $('#doughnutBtn').on('click', function() {
+      renderCltv('doughnut');
+    });
+    $('#pieBtn').on('click', function() {
+      renderCltv('pie');
+    });
+    $('#barBtn').on('click', function() {
+      renderCltv('bar');
+    });
+    $('#polarBtn').on('click', function() {
+      renderCltv('polarArea');
+    });
+    // Initial chart render
+    renderCltv('polarArea');
+
+    function renderRevenueT(type) {
+      if (revenue_tier_chart) {
+        revenue_tier_chart.destroy(); // Destroy previous chart before rendering a new one
+      }
+      const revenue_data = {
+        labels: {{r_tiers | safe}},
+        datasets: [{
+          label: 'Revenue by Tier',
+          data: {{r_revenue}},
+          borderWidth: 1
+        }]
+      };
+      const revenue_options = {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        indexAxis: 'y',
+      };
+      revenue_tier_chart = new Chart(ctx2, {
+        type: type,
+        data: revenue_data,
+        options: revenue_options
+      });
+    }
+    // Button click handlers
+    $('#doughnutBtn2').on('click', function() {
+      renderRevenueT('doughnut');
+    });
+    $('#pieBtn2').on('click', function() {
+      renderRevenueT('pie');
+    });
+    $('#barBtn2').on('click', function() {
+      renderRevenueT('bar');
+    });
+    $('#polarBtn2').on('click', function() {
+      renderRevenueT('polarArea');
+    });
+    // Initial chart render
+    renderRevenueT('polarArea');
+  
+  });
+</script>
+
+
+{% endblock content %}
