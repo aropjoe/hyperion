@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Dashboard| Hyperion</title>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+{% endblock title %}
+
+{% block header %}
+<h1 class="text-3xl font-bold tracking-tight text-gray-900">Dashboard</h1>
+{% endblock header %}
+
+{% block content %}
+  <div class="grid grid-cols-2 md:grid-cols-2 gap-4 p-4">
+    <div class="block w-full p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+      <div class="flex flex-col">
+        <dt class="mb-2 mt-2 text-3xl font-extrabold">$77,300</dt>
+        <dd class="text-gray-500">Revenue</dd>
+      </div>
+    </div>
+
+    <div class="block w-full p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+       <h5 class="mb-2 text-base font-bold tracking-tight text-gray-900">Category</h5>
+      <div id="chart"></div>
+    </div>
+
+    <div class="block w-full p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+      <div id="chart2"></div>
+    </div>
+
+    <div class="block w-full p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+       <h5 class="mb-2 text-base font-bold tracking-tight text-gray-900">Products</h5>
+    
+      <div id="chart3"></div>
+    </div>
+
+    <div class="block w-full p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+       <h5 class="mb-2 text-base font-bold tracking-tight text-gray-900">Revenue vs Profit</h5>
+      <div id="chart4"></div>
+    </div>
+
+    <div class="block w-full p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+       <h5 class="mb-2 text-base font-bold tracking-tight text-gray-900">Sub category</h5>
+      <div id="chart5"></div>
+    </div>
+
+    <div class="block w-full p-4 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+       <h5 class="mb-2 text-base font-bold tracking-tight text-gray-900">Average Latency</h5>
+    
+      <div id="chart6"></div>
+    </div>
+  </div>
+  <script>
+    var options = {
+      series: [44, 55, 41, 17, 15],
+      chart: {
+        type: "donut"
+      },
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200,
+            height: 200
+          },
+          legend: {
+            position: "bottom"
+          }
+        }
+      }]
+    };
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();
+    var options = {
+      series: [{
+        name: "Desktops",
+        data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
+      }, {
+        name: "PCs",
+        data: [10, 41, 69, 91, 148]
+      }],
+      chart: {
+        height: 350,
+        type: 'line',
+        zoom: {
+          enabled: false
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        curve: 'straight'
+      },
+      title: {
+        text: 'Product Trends by Month',
+        align: 'left'
+      },
+      grid: {
+        row: {
+          colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+          opacity: 0.5
+        },
+      },
+      xaxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+      }
+    };
+    var chart = new ApexCharts(document.querySelector("#chart2"), options);
+    chart.render();
+    var options = {
+      series: [{
+        data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
+      }],
+      chart: {
+        type: 'bar',
+        height: 350
+      },
+      plotOptions: {
+        bar: {
+          borderRadius: 4,
+          horizontal: true,
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      xaxis: {
+        categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan',
+          'United States', 'China', 'Germany'
+        ],
+      }
+    };
+    var chart = new ApexCharts(document.querySelector("#chart3"), options);
+    chart.render();
+    var options = {
+      series: [{
+        name: 'TEAM A',
+        type: 'area',
+        data: [44, 55, 31, 47, 31, 43, 26, 41, 31, 47, 33]
+      }, {
+        name: 'TEAM B',
+        type: 'line',
+        data: [55, 69, 45, 61, 43, 54, 37, 52, 44, 61, 43]
+      }],
+      chart: {
+        height: 350,
+        type: 'line',
+      },
+      stroke: {
+        curve: 'smooth'
+      },
+      fill: {
+        type: 'solid',
+        opacity: [0.35, 1],
+      },
+      labels: ['Dec 01', 'Dec 02', 'Dec 03', 'Dec 04', 'Dec 05', 'Dec 06', 'Dec 07', 'Dec 08', 'Dec 09 ', 'Dec 10', 'Dec 11'],
+      markers: {
+        size: 0
+      },
+      yaxis: [{
+          title: {
+            text: 'Series A',
+          },
+        },
+        {
+          opposite: true,
+          title: {
+            text: 'Series B',
+          },
+        },
+      ],
+      tooltip: {
+        shared: true,
+        intersect: false,
+        y: {
+          formatter: function(y) {
+            if (typeof y !== "undefined") {
+              return y.toFixed(0) + " points";
+            }
+            return y;
+          }
+        }
+      }
+    };
+    var chart = new ApexCharts(document.querySelector("#chart4"), options);
+    chart.render();
+    var options = {
+      series: [70],
+      chart: {
+        height: 350,
+        type: 'radialBar',
+      },
+      plotOptions: {
+        radialBar: {
+          hollow: {
+            size: '70%',
+          }
+        },
+      },
+      labels: ['Cricket'],
+    };
+    var chart = new ApexCharts(document.querySelector("#chart6"), options);
+    chart.render();
+    var options = {
+      series: [44, 55, 67, 83],
+      chart: {
+        height: 350,
+        type: 'radialBar',
+      },
+      plotOptions: {
+        radialBar: {
+          dataLabels: {
+            name: {
+              fontSize: '22px',
+            },
+            value: {
+              fontSize: '16px',
+            },
+            total: {
+              show: true,
+              label: 'Total',
+              formatter: function(w) {
+                // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+                return 249
+              }
+            }
+          }
+        }
+      },
+      labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
+    };
+    var chart = new ApexCharts(document.querySelector("#chart5"), options);
+    chart.render();
+  </script>
+{% endblock content %}
