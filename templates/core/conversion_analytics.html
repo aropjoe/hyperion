@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>{{data.name}} | Hyperion</title>
+{% endblock title %}
+
+{% block header %}
+<h1 class="text-3xl font-bold tracking-tight text-gray-900">Conversion Analytics</h1>
+{% endblock header %}
+
+{% block content %}
+
+{% if not empty_file %}
+
+<div class="lg:flex lg:items-center lg:justify-between">
+  <div class="min-w-0 flex-1">
+    <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">{{data.name}} - {{conversion_rate_result}}</h2>
+  </div>
+  <div class="mt-5 flex lg:ml-4 lg:mt-0">
+
+    <span class="hidden sm:block">
+      <button type="button" data-modal-target="noteModal" data-modal-toggle="noteModal" class="ml-2 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+        <svg class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path>
+        </svg>
+        Add Note/Summary
+      </button>
+    </span>
+
+  </div>
+</div>
+
+<div>
+  <div class="hidden p-4 rounded-lg bg-gray-50" id="conversion">
+    <div class="p-4" style="height: 450px;">
+      <div class="mb-6 inline-flex rounded-md shadow-sm" role="group">
+        <button id="doughnutBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 9.563C9 9.252 9.252 9 9.563 9h4.874c.311 0 .563.252.563.563v4.874c0 .311-.252.563-.563.563H9.564A.562.562 0 019 14.437V9.564z"></path>
+          </svg>
+          Doughnut
+        </button>
+        <button id="pieBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"></path>
+          </svg>
+          Pie
+        </button>
+        <button id="polarBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border-t border-b border-l border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"></path>
+          </svg>
+          Polar Area
+        </button>
+        <button id="barBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"></path>
+          </svg>
+          Bar
+        </button>
+        
+      </div>
+      <canvas id="myConversionChart"></canvas>
+    </div>
+  </div>
+</div>
+
+{% else %}
+
+<h1 class="text-xl font-bold tracking-tight text-gray-900">File is empty</h1>
+
+{% endif %}
+
+
+<!-- Note modal -->
+<div id="noteModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative w-full max-w-2xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow">
+            <!-- Modal header -->
+            <div class="flex items-start justify-between p-4 border-b rounded-t">
+                <h3 class="text-xl font-semibold text-gray-900">
+                    Add Note/Summary
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-hide="noteModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form class="p-4" method="POST" action="{% url 'core:analysis_create' %}">
+              {% csrf_token %}
+              <div class="mb-6">
+                  <label for="title" class="block mb-2 text-sm font-medium text-gray-900">Title</label>
+                  <input type="text" id="title" name="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="" required>
+                </div>       
+              <div class="mb-6">  
+                <label for="insights" class="block mb-2 text-sm font-medium text-gray-900">Insights</label>
+                <textarea id="insights" rows="4" name="insights" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="Write a note or summary about this data..."></textarea>
+              </div>
+              <button type="submit" class="mb-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Save</button>
+              <input class="hidden" type="text" name="data_id" value="{{data.id}}">
+
+            </form>
+           
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script>
+  $(document).ready(function() {
+    const ctx = document.getElementById('myConversionChart');
+    let conversion_chart = null;
+
+    function renderConversion(type) {
+      if (conversion_chart) {
+        conversion_chart.destroy(); // Destroy previous chart before rendering a new one
+      }
+      const conversion_data = {
+        labels: ["Purchases", "Signups"],
+        datasets: [{
+          label: 'Conversion Analytics',
+          data: {{total_purchases}} {{total_signups}},
+          borderWidth: 1
+        }]
+      };
+      const conversion_options = {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        indexAxis: 'y',
+      };
+      conversion_chart = new Chart(ctx, {
+        type: type,
+        data: conversion_data,
+        options: conversion_options
+      });
+    }
+    // Button click handlers
+    $('#doughnutBtn').on('click', function() {
+      renderConversion('doughnut');
+    });
+    $('#pieBtn').on('click', function() {
+      renderConversion('pie');
+    });
+    $('#barBtn').on('click', function() {
+      renderConversion('bar');
+    });
+    $('#polarBtn').on('click', function() {
+      renderConversion('polarArea');
+    });
+    // Initial chart render
+    renderConversion('polarArea');
+
+   
+  
+  });
+</script>
+
+
+{% endblock content %}
