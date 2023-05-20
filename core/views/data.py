@@ -21,9 +21,23 @@ from core.utils import (
     generate_chord_graph_image,
     read_text_data,
 )
-from core.engine.revenue import calculate_cltv, average_revenue, revenue_by_tier, total_revenue, read_subscriptions_from_json, revenue_by_tier_array, cltv_array
+from core.engine.revenue import (
+    calculate_cltv,
+    average_revenue,
+    revenue_by_tier,
+    total_revenue,
+    read_subscriptions_from_json,
+    revenue_by_tier_array,
+    cltv_array,
+)
 from core.engine.conversion_rate import calculate_conversion_rate, read_conversion_data
-from core.engine.performance import calculate_response_time, calculate_average_latency, calculate_uptime, read_server_logs_from_csv, read_server_logs_from_json 
+from core.engine.performance import (
+    calculate_response_time,
+    calculate_average_latency,
+    calculate_uptime,
+    read_server_logs_from_csv,
+    read_server_logs_from_json,
+)
 from core.sentiment import analyze_sentiment
 import json
 
@@ -134,7 +148,10 @@ def performance_metrics(request, data_id):
     average_latency = calculate_average_latency(server_logs)
     uptime_percentage = f"{uptime_percentage:.2f}%"
 
-    stamps = [datetime.datetime.strptime(log_entry["timestamp"], "%Y-%m-%d %H:%M:%S") for log_entry in server_logs]
+    stamps = [
+        datetime.datetime.strptime(log_entry["timestamp"], "%Y-%m-%d %H:%M:%S")
+        for log_entry in server_logs
+    ]
     latency_data = [x["latency"] for x in server_logs]
     response_times = [x["response_time"] for x in server_logs]
 

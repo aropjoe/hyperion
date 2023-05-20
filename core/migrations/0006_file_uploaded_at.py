@@ -5,7 +5,6 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("core", "0005_file_file_mime_type_file_file_name_file_file_size_and_more"),
     ]

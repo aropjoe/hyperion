@@ -20,7 +20,6 @@ def read_text_data(file_path):
 
 
 def generate_bigram_wordcloud_images(reviews_negative, reviews_positive):
-
     # Generate a word cloud - negative sentiment
     wordcloud_neg = WordCloud(
         collocation_threshold=2,
@@ -64,7 +63,6 @@ def generate_bigram_wordcloud_images(reviews_negative, reviews_positive):
 
 # Wordcloud - trigrams
 def generate_wordcloud_images(pos_text, neg_text):
-
     neg_trigrams = ngrams(neg_text.split(), 3)
     neg_freq_dist = nltk.FreqDist(neg_trigrams)
     trigrams_neg_dict = {" ".join(tri): freq for tri, freq in neg_freq_dist.items()}

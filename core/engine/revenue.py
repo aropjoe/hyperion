@@ -62,4 +62,3 @@ def cltv_array(cltv):
         revenue.append(r)
 
     return tier, revenue
-
