@@ -8,39 +8,58 @@ def read_subscriptions_from_json(file_path):
     return subscriptions
 
 
-file_path = "revenue.json"
-subscriptions_data = read_subscriptions_from_json(file_path)
-
 # Calculate total revenue
-total_revenue = sum(subscription["amount"] for subscription in subscriptions_data)
+def total_revenue(subscriptions_data):
+    return sum(subscription["amount"] for subscription in subscriptions_data)
+
 
 # Calculate revenue by tier
-revenue_by_tier = {}
-for subscription in subscriptions_data:
-    tier = subscription["plan"]
-    if tier in revenue_by_tier:
-        revenue_by_tier[tier] += subscription["amount"]
-    else:
-        revenue_by_tier[tier] = subscription["amount"]
+def revenue_by_tier(subscriptions_data):
+    revenue_by_tier = {}
+    for subscription in subscriptions_data:
+        tier = subscription["plan"]
+        if tier in revenue_by_tier:
+            revenue_by_tier[tier] += subscription["amount"]
+        else:
+            revenue_by_tier[tier] = subscription["amount"]
+    return revenue_by_tier
+
 
 # Calculate average revenue per subscription
-average_revenue_per_subscription = total_revenue / len(subscriptions_data)
+def average_revenue(subscriptions_data, total_revenue):
+    return total_revenue / len(subscriptions_data)
+
 
 # Calculate customer lifetime value (CLTV)
-cltv = {}
-for subscription in subscriptions_data:
-    tier = subscription["plan"]
-    if tier in cltv:
-        cltv[tier] += subscription["amount"]
-    else:
-        cltv[tier] = subscription["amount"]
+def calculate_cltv(subscriptions_data):
+    cltv = {}
+    for subscription in subscriptions_data:
+        tier = subscription["plan"]
+        if tier in cltv:
+            cltv[tier] += subscription["amount"]
+        else:
+            cltv[tier] = subscription["amount"]
+    return cltv
 
-# Print the results
-print(f"Total Revenue: ${total_revenue}")
-print("Revenue by Tier:")
-for tier, revenue in revenue_by_tier.items():
-    print(f"{tier}: ${revenue}")
-print(f"Average Revenue per Subscription: ${average_revenue_per_subscription:.2f}")
-print("Customer Lifetime Value (CLTV):")
-for tier, revenue in cltv.items():
-    print(f"{tier}: ${revenue}")
+
+def revenue_by_tier_array(revenue_by_tier):
+    tier = []
+    revenue = []
+
+    for t, r in revenue_by_tier.items():
+        tier.append(t)
+        revenue.append(r)
+
+    return tier, revenue
+
+
+def cltv_array(cltv):
+    tier = []
+    revenue = []
+
+    for t, r in cltv.items():
+        tier.append(t)
+        revenue.append(r)
+
+    return tier, revenue
+
