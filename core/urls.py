@@ -33,6 +33,7 @@ urlpatterns = [
     path("data/<int:data_id>/", data_detail, name="data_detail"),
     path("data/<int:data_id>/analysis/", data_analysis, name="data_analysis"),
     path("data/<int:data_id>/text-analysis/", text_analysis, name="text_analysis"),
+    path("data/<int:data_id>/subscription-analytics/", subscription_analytics, name="subscription_analytics"),
     path(
         "data/<int:data_id>/performance-metrics/",
         performance_metrics,
