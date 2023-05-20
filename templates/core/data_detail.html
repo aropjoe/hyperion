@@ -9,6 +9,9 @@
 {% endblock header %}
 
 {% block content %}
+
+{% include 'core/analysis_options.html' %}
+
 <div class="lg:flex lg:items-center lg:justify-between">
   <div class="min-w-0 flex-1">
     <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">{{data.name}}</h2>
@@ -40,7 +43,7 @@
   <div class="mt-5 flex lg:ml-4 lg:mt-0">
 
     <span class="hidden sm:block">
-      <button id="analysedropdownDefaultButton" data-dropdown-toggle="analyse_dropdown" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+      <button data-modal-target="analysisModal" data-modal-toggle="analysisModal" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
         <svg class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"></path>
         </svg>
@@ -55,7 +58,7 @@
         <li>
           <a href="{% url 'core:text_analysis' data.id %}" class="block px-4 py-2 hover:bg-gray-100">Text Analysis</a>
         </li>
-      </ul>
+      </ul> 
     </div>
 
     <span class="ml-3 hidden sm:block">
