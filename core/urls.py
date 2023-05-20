@@ -19,6 +19,7 @@ from .views import (
     project_delete,
     text_analysis,
     dashboard,
+    conversion_analytics,
 )
 
 app_name = "core"
@@ -30,6 +31,7 @@ urlpatterns = [
     path("data/<int:data_id>/", data_detail, name="data_detail"),
     path("data/<int:data_id>/analysis/", data_analysis, name="data_analysis"),
     path("data/<int:data_id>/text-analysis/", text_analysis, name="text_analysis"),
+    path("data/<int:data_id>/conversion-analytics/", conversion_analytics, name="conversion_analytics"),
     path("data/<int:data_id>/update/", data_update, name="data_update"),
     path("data/<int:data_id>/upload/", data_upload, name="data_upload"),
     path("data/<int:data_id>/delete/", data_delete, name="data_delete"),
