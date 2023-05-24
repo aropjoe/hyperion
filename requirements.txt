@@ -1,6 +1,11 @@
+django
+scikit-learn
+nltk
+spacy
 pandas
 xlrd
 openpyxl
 nxviz
 matplotlib
-
+networkx
+wordcloud
