@@ -1,0 +1,381 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>{{data.name}} | Hyperion</title>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+{% endblock title %}
+
+{% block header %}
+<h1 class="text-3xl font-bold tracking-tight text-gray-900">{{data.name}}</h1>
+{% endblock header %}
+
+{% block content %}
+
+{% if not empty_file %}
+
+<div class="lg:flex lg:items-center lg:justify-between">
+  <div class="min-w-0 flex-1">
+    <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Analysis</h2>
+  </div>
+  <div class="mt-5 flex lg:ml-4 lg:mt-0">
+
+    <span class="hidden sm:block">
+      <button type="button" data-modal-target="filterModal" data-modal-toggle="filterModal" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+        <svg class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z"></path>
+        </svg>
+        Filter
+      </button>
+      <button type="button" data-modal-target="noteModal" data-modal-toggle="noteModal" class="ml-2 inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+        <svg class="-ml-0.5 mr-1.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path>
+        </svg>
+        Add Note/Summary
+      </button>
+    </span>
+
+  </div>
+</div>
+
+<div class="flex mb-4 items-center">
+  <h2 class="text-base font-bold text-gray-900 sm:truncate sm:tracking-tight">Total Sales: ₦{{total_sales}}</h2>
+  <h2 class="ml-4 mr-4 text-base font-bold text-gray-900 sm:truncate sm:tracking-tight">Total Profit: ₦{{total_profit}}</h2>
+</div>
+
+<div class="mb-4 border-b border-gray-200">
+  <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
+    <li class="mr-2" role="presentation">
+      <button class="inline-block p-4 border-b-2 rounded-t-lg" id="categories-tab" data-tabs-target="#categories" type="button" role="tab" aria-controls="categories" aria-selected="false">Top Categories</button>
+    </li>
+    <li class="mr-2" role="presentation">
+      <button class="inline-block p-4 border-b-2 rounded-t-lg" id="subcategories-tab" data-tabs-target="#subcategories" type="button" role="tab" aria-controls="subcategories" aria-selected="false">Sub Categories</button>
+    </li>
+    <li class="mr-2" role="presentation">
+      <button class="inline-block p-4 border-b-2 rounded-t-lg" id="products-tab" data-tabs-target="#products" type="button" role="tab" aria-controls="products" aria-selected="false">Top Products</button>
+    </li>
+    <li class="mr-2" role="presentation">
+      <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300" id="revenue-tab" data-tabs-target="#revenue" type="button" role="tab" aria-controls="revenue" aria-selected="false">Revenue & Sales</button>
+    </li>
+    <li class="mr-2" role="presentation">
+      <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300" id="growth-tab" data-tabs-target="#growth" type="button" role="tab" aria-controls="growth" aria-selected="false">Profit & Growth</button>
+    </li>
+    <li role="presentation">
+      <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300" id="blend-tab" data-tabs-target="#blend" type="button" role="tab" aria-controls="blend" aria-selected="false">Blended (Revenue & Profits)</button>
+    </li>
+  </ul>
+</div>
+<div id="myTabContent">
+  <div class="hidden p-4 rounded-lg bg-gray-50" id="categories" role="tabpanel" aria-labelledby="categories-tab">
+    <div class="p-4" style="height: 450px;">
+      <div class="mb-6 inline-flex rounded-md shadow-sm" role="group">
+        <button id="doughnutBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 9.563C9 9.252 9.252 9 9.563 9h4.874c.311 0 .563.252.563.563v4.874c0 .311-.252.563-.563.563H9.564A.562.562 0 019 14.437V9.564z"></path>
+          </svg>
+          Doughnut
+        </button>
+        <button id="pieBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"></path>
+          </svg>
+          Pie
+        </button>
+        <button id="polarBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border-t border-b border-l border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"></path>
+          </svg>
+          Polar Area
+        </button>
+        <button id="barBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"></path>
+          </svg>
+          Bar
+        </button>
+        
+      </div>
+      <canvas id="myCategoryChart"></canvas>
+    </div>
+  </div>
+  <div class="hidden p-4 rounded-lg bg-gray-50" id="subcategories" role="tabpanel" aria-labelledby="subcategories-tab">
+    <div class="p-4">
+      <div class="mb-6 inline-flex rounded-md shadow-sm" role="group">
+        <button id="sub_doughnutBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 9.563C9 9.252 9.252 9 9.563 9h4.874c.311 0 .563.252.563.563v4.874c0 .311-.252.563-.563.563H9.564A.562.562 0 019 14.437V9.564z"></path>
+          </svg>
+          Doughnut
+        </button>
+        <button id="sub_pieBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"></path>
+          </svg>
+          Pie
+        </button>
+        <button id="sub_polarBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border-t border-l border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"></path>
+          </svg>
+          Polar Area
+        </button>
+        <button id="sub_barBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"></path>
+          </svg>
+          Bar
+        </button>
+        
+      </div>
+      <canvas id="mySubCategoryChart"></canvas>
+    </div>
+  </div>
+  <div class="hidden p-4 rounded-lg bg-gray-50" id="products" role="tabpanel" aria-labelledby="products-tab">
+    <div class="p-4">
+      <div class="mb-6 inline-flex rounded-md shadow-sm" role="group">
+        <button id="product_doughnutBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 9.563C9 9.252 9.252 9 9.563 9h4.874c.311 0 .563.252.563.563v4.874c0 .311-.252.563-.563.563H9.564A.562.562 0 019 14.437V9.564z"></path>
+          </svg>
+          Doughnut
+        </button>
+        <button id="product_pieBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"></path>
+          </svg>
+          Pie
+        </button>
+        <button id="product_polarBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border-t border-l border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z"></path>
+          </svg>
+          Polar Area
+        </button>
+        <button id="product_barBtn" type="button" class="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"></path>
+          </svg>
+          Bar
+        </button>
+        
+      </div>
+      <canvas id="myProductChart"></canvas>
+    </div>
+  </div>
+  <div class="hidden p-4 rounded-lg bg-gray-50" id="revenue" role="tabpanel" aria-labelledby="revenue-tab">
+    <div class="p-4 w-full">
+      <canvas id="myRevenueChart"></canvas>
+    </div>
+  </div>
+  <div class="hidden p-4 rounded-lg bg-gray-50" id="growth" role="tabpanel" aria-labelledby="growth-tab">
+    <div class="p-4 w-full">
+      <canvas id="myGrowthChart"></canvas>
+    </div>
+  </div>
+  <div class="hidden p-4 rounded-lg bg-gray-50" id="blend" role="tabpanel" aria-labelledby="blend-tab">
+    <div class="p-4 w-full">
+      <canvas id="myBlendedChart"></canvas>
+    </div>
+  </div>
+</div>
+
+{% else %}
+
+<h1 class="text-xl font-bold tracking-tight text-gray-900">File is empty</h1>
+
+{% endif %}
+
+
+
+  <script>
+    var options = {
+      series: [44, 55, 41, 17, 15],
+      chart: {
+        type: "donut"
+      },
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          chart: {
+            width: 200,
+            height: 200
+          },
+          legend: {
+            position: "bottom"
+          }
+        }
+      }]
+    };
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();
+    var options = {
+      series: [{
+        name: "Desktops",
+        data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
+      }, {
+        name: "PCs",
+        data: [10, 41, 69, 91, 148]
+      }],
+      chart: {
+        height: 350,
+        type: 'line',
+        zoom: {
+          enabled: false
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      stroke: {
+        curve: 'straight'
+      },
+      title: {
+        text: 'Product Trends by Month',
+        align: 'left'
+      },
+      grid: {
+        row: {
+          colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+          opacity: 0.5
+        },
+      },
+      xaxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+      }
+    };
+    var chart = new ApexCharts(document.querySelector("#chart2"), options);
+    chart.render();
+    var options = {
+      series: [{
+        data: [400, 430, 448, 470, 540, 580, 690, 1100, 1200, 1380]
+      }],
+      chart: {
+        type: 'bar',
+        height: 350
+      },
+      plotOptions: {
+        bar: {
+          borderRadius: 4,
+          horizontal: true,
+        }
+      },
+      dataLabels: {
+        enabled: false
+      },
+      xaxis: {
+        categories: ['South Korea', 'Canada', 'United Kingdom', 'Netherlands', 'Italy', 'France', 'Japan',
+          'United States', 'China', 'Germany'
+        ],
+      }
+    };
+    var chart = new ApexCharts(document.querySelector("#chart3"), options);
+    chart.render();
+    var options = {
+      series: [{
+        name: 'TEAM A',
+        type: 'area',
+        data: [44, 55, 31, 47, 31, 43, 26, 41, 31, 47, 33]
+      }, {
+        name: 'TEAM B',
+        type: 'line',
+        data: [55, 69, 45, 61, 43, 54, 37, 52, 44, 61, 43]
+      }],
+      chart: {
+        height: 350,
+        type: 'line',
+      },
+      stroke: {
+        curve: 'smooth'
+      },
+      fill: {
+        type: 'solid',
+        opacity: [0.35, 1],
+      },
+      labels: ['Dec 01', 'Dec 02', 'Dec 03', 'Dec 04', 'Dec 05', 'Dec 06', 'Dec 07', 'Dec 08', 'Dec 09 ', 'Dec 10', 'Dec 11'],
+      markers: {
+        size: 0
+      },
+      yaxis: [{
+          title: {
+            text: 'Series A',
+          },
+        },
+        {
+          opposite: true,
+          title: {
+            text: 'Series B',
+          },
+        },
+      ],
+      tooltip: {
+        shared: true,
+        intersect: false,
+        y: {
+          formatter: function(y) {
+            if (typeof y !== "undefined") {
+              return y.toFixed(0) + " points";
+            }
+            return y;
+          }
+        }
+      }
+    };
+    var chart = new ApexCharts(document.querySelector("#chart4"), options);
+    chart.render();
+    var options = {
+      series: [70],
+      chart: {
+        height: 350,
+        type: 'radialBar',
+      },
+      plotOptions: {
+        radialBar: {
+          hollow: {
+            size: '70%',
+          }
+        },
+      },
+      labels: ['Cricket'],
+    };
+    var chart = new ApexCharts(document.querySelector("#chart6"), options);
+    chart.render();
+    var options = {
+      series: [44, 55, 67, 83],
+      chart: {
+        height: 350,
+        type: 'radialBar',
+      },
+      plotOptions: {
+        radialBar: {
+          dataLabels: {
+            name: {
+              fontSize: '22px',
+            },
+            value: {
+              fontSize: '16px',
+            },
+            total: {
+              show: true,
+              label: 'Total',
+              formatter: function(w) {
+                // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+                return 249
+              }
+            }
+          }
+        }
+      },
+      labels: ['Apples', 'Oranges', 'Bananas', 'Berries'],
+    };
+    var chart = new ApexCharts(document.querySelector("#chart5"), options);
+    chart.render();
+  </script>
+{% endblock content %}
