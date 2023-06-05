@@ -30,6 +30,14 @@ from core.engine.revenue import (
     revenue_by_tier_array,
     cltv_array,
 )
+from core.engine.po import (
+    group_purchases_by_date,
+    group_purchases_by_supplier,
+    group_amount_by_supplier,
+    group_quantities_by_supplier,
+    group_purchases_by_line_number,
+    group_purchases_by_part_number,
+)
 from core.engine.conversion_rate import calculate_conversion_rate, read_conversion_data
 from core.engine.performance import (
     calculate_response_time,
@@ -226,7 +234,7 @@ def po_analysis(request, data_id):
             total_amount = add_commas_to_integer(total_amount) # total sales
 
             total_qty = sum_column(data_frame, "QTY")
-
+            
             context.update(
                 {
                     "total_qty": total_qty,
@@ -240,12 +248,18 @@ def po_analysis(request, data_id):
                     "suppliers_accounts": suppliers_accounts,
                     "line_numbers": line_numbers,
                     "part_numbers": part_numbers,
+                    "gpp": group_purchases_by_part_number,
+                    "gpl": group_purchases_by_line_number,
+                    "gqs": group_quantities_by_supplier,
+                    "gas": group_amount_by_supplier,
+                    "gps": group_purchases_by_supplier,
+                    "gpd": group_purchases_by_date,
                 }
             )
         else:
             context["empty_file"] = True
 
-    return render(request, "core/orders_analysis.html", context)
+    return render(request, "core/order_analysis.html", context)
 
 
 @login_required
