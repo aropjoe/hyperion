@@ -213,6 +213,7 @@ def po_analysis(request, data_id):
     data = get_object_or_404(Data, pk=data_id)
     file_path = data.files.first().file.path
     data_frame = pd.read_csv(file_path)
+    data_frame = data_frame.dropna()
     #data_frame = process_excel(file_path)
 
     context = {
@@ -237,7 +238,7 @@ def po_analysis(request, data_id):
             total_amount = add_commas_to_integer(total_amount) # total sales
 
             total_qty = sum_column(data_frame, "QTY")
-            
+            print(total_qty, total_amount)
             context.update(
                 {
                     "total_qty": total_qty,
@@ -251,12 +252,12 @@ def po_analysis(request, data_id):
                     "suppliers_accounts": suppliers_accounts,
                     "line_numbers": line_numbers,
                     "part_numbers": part_numbers,
-                    "gpp": group_purchases_by_part_number,
-                    "gpl": group_purchases_by_line_number,
-                    "gqs": group_quantities_by_supplier,
-                    "gas": group_amount_by_supplier,
-                    "gps": group_purchases_by_supplier,
-                    "gpd": group_purchases_by_date,
+                    "gpp": group_purchases_by_part_number(data_frame),
+                    "gpl": group_purchases_by_line_number(data_frame),
+                    "gqs": group_quantities_by_supplier(data_frame),
+                    "gas": group_amount_by_supplier(data_frame),
+                    "gps": group_purchases_by_supplier(data_frame),
+                    "gpd": group_purchases_by_date(data_frame),
                 }
             )
         else:
