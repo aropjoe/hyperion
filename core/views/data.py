@@ -48,6 +48,7 @@ from core.engine.performance import (
 )
 from core.sentiment import analyze_sentiment
 import json
+import pandas as pd
 
 
 @login_required
@@ -211,11 +212,13 @@ def subscription_analytics(request, data_id):
 def po_analysis(request, data_id):
     data = get_object_or_404(Data, pk=data_id)
     file_path = data.files.first().file.path
-    data_frame = process_excel(file_path)
+    data_frame = pd.read_csv(file_path)
+    #data_frame = process_excel(file_path)
 
     context = {
         "data": data,
     }
+    print(data_frame)
 
     if data_frame is not None:
         if not data_frame.empty:
