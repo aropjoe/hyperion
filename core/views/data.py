@@ -213,7 +213,7 @@ def po_analysis(request, data_id):
     data = get_object_or_404(Data, pk=data_id)
     file_path = data.files.first().file.path
     data_frame = pd.read_csv(file_path)
-    data_frame = data_frame.dropna()
+    #data_frame = data_frame.dropna()
     #data_frame = process_excel(file_path)
 
     context = {

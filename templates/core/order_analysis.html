@@ -53,26 +53,26 @@
 <div id="myTabContent">
   <div class="hidden p-4 rounded-lg bg-gray-50" id="categories" role="tabpanel" aria-labelledby="categories-tab">
     <div class="p-4">
-      <canvas id="gpl"></canvas>
+      <div id="gpl"></div>
     </div>
     <div class="p-4">
-      <canvas id="gpp"></canvas>
+      <div id="gpp"></div>
     </div>
   </div>
   <div class="hidden p-4 rounded-lg bg-gray-50" id="suppliers" role="tabpanel" aria-labelledby="suppliers-tab">
     <div class="p-4">
-      <canvas id="gas"></canvas>
+      <div id="gas"></div>
     </div>
     <div class="p-4">
-      <canvas id="gqs"></canvas>
+      <div id="gqs"></div>
     </div>
     <div class="p-4">
-      <canvas id="gps"></canvas>
+      <div id="gps"></div>
     </div>
   </div>
   <div class="hidden p-4 rounded-lg bg-gray-50" id="purchases" role="tabpanel" aria-labelledby="purchases-tab">
     <div class="p-4">
-      <canvas id="gpd"></canvas>
+      <div id="gpd"></div>
     </div>
   </div>
 
@@ -126,7 +126,7 @@
         //height: 350,
         type: 'donut',
       },
-      labels: {{gpl.line_numbers}},
+      labels: {{gpl.line_numbers | safe}},
       responsive: [{
         breakpoint: 480,
         options: {
@@ -149,7 +149,7 @@
         //height: 350,
         type: 'donut',
       },
-      labels: {{gpp.part_numbers}},
+      labels: {{gpp.part_numbers | safe}},
       responsive: [{
         breakpoint: 480,
         options: {
@@ -195,7 +195,7 @@
         //height: 350,
         type: 'donut',
       },
-      labels: {{gas.suppliers}},
+      labels: {{gas.suppliers | safe}},
       responsive: [{
         breakpoint: 480,
         options: {
@@ -218,7 +218,7 @@
         //height: 350,
         type: 'donut',
       },
-      labels: {{gps.suppliers}},
+      labels: {{gps.suppliers | safe}},
       responsive: [{
         breakpoint: 480,
         options: {
@@ -253,7 +253,7 @@
         enabled: false
       },
       xaxis: {
-        categories: {{gpd.dates}},
+        categories: {{gpd.dates | safe}},
       }
     };
     var chart = new ApexCharts(document.querySelector("#gpd"), options);
