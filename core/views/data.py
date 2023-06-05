@@ -200,6 +200,55 @@ def subscription_analytics(request, data_id):
 
 
 @login_required
+def po_analysis(request, data_id):
+    data = get_object_or_404(Data, pk=data_id)
+    file_path = data.files.first().file.path
+    data_frame = process_excel(file_path)
+
+    context = {
+        "data": data,
+    }
+
+    if data_frame is not None:
+        if not data_frame.empty:
+            po_creation_dates = data_frame["PO CREATION DATE"].to_list()
+            po_numbers = data_frame["PO NUMBER"].to_list()
+            qtys = data_frame["QTY"].to_list() 
+            total_line_amounts = data_frame["TOTAL LINE AMOUNT"].to_list()
+            currencies = data_frame["Currency"].to_list() 
+            unit_costs = data_frame["UNIT COST "].to_list() 
+            suppliers_accounts = data_frame["SUPPLIER ACCOUNT"].to_list() 
+            line_numbers = data_frame["LineNumber"].to_list() 
+            part_numbers = data_frame["Part Number"].to_list() 
+
+            total_amount = sum_column(data_frame, "TOTAL LINE AMOUNT")
+            total_amount = round_up_to_2_decimal(total_amount)
+            total_amount = add_commas_to_integer(total_amount) # total sales
+
+            total_qty = sum_column(data_frame, "QTY")
+
+            context.update(
+                {
+                    "total_qty": total_qty,
+                    "total_amount": total_amount,
+                    "po_creation_dates": po_creation_dates,
+                    "po_numbers": po_numbers,
+                    "qtys": qtys,
+                    "total_line_amounts": total_line_amounts,
+                    "currencies": currencies,
+                    "unit_costs": unit_costs,
+                    "suppliers_accounts": suppliers_accounts,
+                    "line_numbers": line_numbers,
+                    "part_numbers": part_numbers,
+                }
+            )
+        else:
+            context["empty_file"] = True
+
+    return render(request, "core/orders_analysis.html", context)
+
+
+@login_required
 def data_analysis(request, data_id):
     data = get_object_or_404(Data, pk=data_id)
     file_path = data.files.first().file.path
