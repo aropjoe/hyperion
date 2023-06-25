@@ -49,6 +49,7 @@ from core.engine.performance import (
 from core.sentiment import analyze_sentiment
 import json
 import pandas as pd
+import datetime
 
 
 @login_required
@@ -158,11 +159,11 @@ def performance_metrics(request, data_id):
     uptime_percentage = f"{uptime_percentage:.2f}%"
 
     stamps = [
-        datetime.datetime.strptime(log_entry["timestamp"], "%Y-%m-%d %H:%M:%S")
+        log_entry["timestamp"]
         for log_entry in server_logs
-    ]
-    latency_data = [x["latency"] for x in server_logs]
-    response_times = [x["response_time"] for x in server_logs]
+    ][:20]
+    latency_data = [x["latency"] for x in server_logs][:20]
+    response_times = [x["response_time"] for x in server_logs][:20]
 
     context = {
         "uptime_percentage": uptime_percentage,
@@ -184,20 +185,22 @@ def subscription_analytics(request, data_id):
 
     subscriptions_data = read_subscriptions_from_json(file_path)
     total_revenue = sum(subscription["amount"] for subscription in subscriptions_data)
+    print(total_revenue)
 
     cltv = calculate_cltv(subscriptions_data)
-    total_revenue = total_revenue(subscriptions_data)
-    average_revenue = average_revenue(subscriptions_data, total_revenue)
-    revenue_by_tier = revenue_by_tier(subscriptions_data)
+    #total_revenue = total_revenue(subscriptions_data)
+    avg_rev = average_revenue(subscriptions_data, total_revenue)
+    print(avg_rev)
+    revenue_tier = revenue_by_tier(subscriptions_data)
 
-    r_tiers, r_revenue = revenue_by_tier_array(revenue_by_tier)
+    r_tiers, r_revenue = revenue_by_tier_array(revenue_tier)
     c_tiers, c_revenue = cltv_array(cltv)
 
     context = {
         "cltv": cltv,
         "total_revenue": total_revenue,
-        "average_revenue": average_revenue,
-        "revenue_by_tier": revenue_by_tier,
+        "average_revenue": avg_rev,
+        "revenue_by_tier": revenue_tier,
         "r_tiers": r_tiers,
         "r_revenue": r_revenue,
         "c_revenue": c_revenue,

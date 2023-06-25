@@ -71,8 +71,8 @@ def generate_wordcloud_images(pos_text, neg_text):
     pos_freq_dist = nltk.FreqDist(pos_trigrams)
     trigrams_pos_dict = {" ".join(tri): freq for tri, freq in pos_freq_dist.items()}
 
-    trigrams_neg = pd.read_excel("core/datafile/trigrams_neg.xlsx")
-    trigrams_pos = pd.read_excel("core/datafile/trigrams_pos.xlsx")
+    trigrams_neg = pd.read_excel("files/trigrams_neg.xlsx")
+    trigrams_pos = pd.read_excel("files/trigrams_pos.xlsx")
 
     trigrams_neg_dict = trigrams_neg.set_index("word")["frequency"].to_dict()
     trigrams_pos_dict = trigrams_pos.set_index("word")["frequency"].to_dict()
@@ -113,7 +113,7 @@ def generate_wordcloud_images(pos_text, neg_text):
 
 
 def generate_network_image():
-    data = pd.read_csv("core/datafile/co_occurence.csv")
+    data = pd.read_csv("files/co_occurence.csv")
     G = nx.from_pandas_edgelist(data, "node1", "node2")
 
     fig = plt.figure(figsize=(8, 6))
@@ -136,7 +136,7 @@ def generate_network_image():
 # calculate the degree of nodes, formalize edges
 # Prepare a chord graph
 def generate_chord_graph_image():
-    data = pd.read_csv("core/datafile/co_occurence.csv")
+    data = pd.read_csv("files/co_occurence.csv")
     G = nx.from_pandas_edgelist(data, "node1", "node2")
     for v in G:
         G.nodes[v]["class"] = G.degree(v)

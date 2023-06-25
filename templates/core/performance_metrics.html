@@ -32,7 +32,7 @@
 
 <div class="flex mb-4 items-center">
   <h2 class="text-base font-bold text-gray-900 sm:truncate sm:tracking-tight">Uptime: {{uptime_percentage}}</h2>
-  <h2 class="ml-4 mr-4 text-base font-bold text-gray-900 sm:truncate sm:tracking-tight">Response Times: {{response_times_percentage}}</h2>
+  <h2 class="ml-4 mr-4 text-base font-bold text-gray-900 sm:truncate sm:tracking-tight">Response Times (Max, Min, Avg): {{response_times_percentage}}</h2>
   <h2 class="ml-4 mr-4 text-base font-bold text-gray-900 sm:truncate sm:tracking-tight">Average Latency: {{average_latency}}</h2>
 </div>
 
@@ -132,9 +132,7 @@
           label: 'Response Times',
           data: {{ response_times }},
           borderWidth: 1,
-          fill: false,
-          borderColor: 'rgb(75, 192, 192)',
-          tension: 0.1
+          borderColor: 'rgb(75, 192, 192)'
         }]
       };
       const responses_options = {

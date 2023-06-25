@@ -172,7 +172,7 @@
         //height: 350,
         type: 'donut',
       },
-      labels: {{gqs.suppliers}},
+      labels: {{gqs.suppliers | safe}},
       responsive: [{
         breakpoint: 480,
         options: {
@@ -213,7 +213,7 @@
     chart.render();
 
     var options = {
-      series: {{gps.numbers}},
+      series: {{gps.numbers | safe}},
       chart: {
         //height: 350,
         type: 'donut',
@@ -237,7 +237,7 @@
 
     var options = {
       series: [{
-        data: {{gpd.numbers}}
+        data: {{gpd.numbers | safe}}
       }],
       chart: {
         type: 'bar',
