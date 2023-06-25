@@ -80,7 +80,7 @@ def calculate_response_time(server_logs):
     min_response_time = min(response_times)
     average_response_time = sum(response_times) / len(response_times)
     return max_response_time, min_response_time, average_response_time
-
+ 
 """
 file_path = "performance.json"
 server_logs = read_server_logs_from_json(file_path)
